@@ -37,7 +37,7 @@ module.exports = {
         
         if (message.member.hasPermission(['BAN_MEMBERS', 'ADMINISTRATOR'])) {
             if (!message.guild.me.hasPermission(['BAN_MEMBERS', 'ADMINISTRATOR'])) {
-                message.channel.send(NoBotPerm)//.then(r => r.delete({timeout: 5000})).then (Deletes after 5 seconds, bot only; working on player...)
+                message.channel.send(NoBotPerm)
             } else {
                 if (member === message.author){ 
                     message.channel.send(SelfBan)
