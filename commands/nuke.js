@@ -15,7 +15,7 @@ module.exports = {
             .setTitle('NUKED')
             .setDescription(`TACTICAL NUKE INBOUND!`)
             .setImage('https://media.tenor.com/images/b502508d2d6bef4f91802b099ecfcba4/tenor.gif')
-            .setFooter(`Gitbot | Made by Possible#0999`)
+            .setFooter(`Gitbot | Made by Possible#0999 & DOWRD`)
 
         if (message.member.hasPermission('ADMINISTRATOR')) { // look here for more perms https://discord.com/developers/docs/topics/permissions
             message.channel.clone().then(channel => {
