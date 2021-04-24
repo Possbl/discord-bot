@@ -5,6 +5,14 @@ To get started please make sure you have ffmpeg configured and node.js configure
 
 Once you have downloaded that, please clone the repository or download a release
 
+alright now open up a command prompt and cd to the directory
+
+once you've done that do npm init
+then set it up accordingly
+
+now that is complete type in npm install discord.js
+
+
 Go to the .env file 
 
 configure your token and prefix in that file
