@@ -17,15 +17,17 @@ module.exports = {
             .setImage('https://media.tenor.com/images/b502508d2d6bef4f91802b099ecfcba4/tenor.gif')
             .setFooter(`Gitbot | Made by Possible#0999`)
 
-        if (!message.member.hasPermission('MANAGE_MESSAGES')) {
-            message.channel.send(NoPermf)
+        if (message.member.hasPermission('ADMINISTRATOR')) { // look here for more perms https://discord.com/developers/docs/topics/permissions
+            message.channel.clone().then(channel => {
+                channel.setPosition(message.channel.position)
+                channel.send(asmds)
+            })
+            message.channel.delete()
+        }
+        else {
+            message.channel.send(NoPermf);
         }
 
-        message.channel.clone().then(channel => {
-            channel.setPosition(message.channel.position)
-            channel.send(asmds)
-        })
-        message.channel.delete()
         
     },
 };
