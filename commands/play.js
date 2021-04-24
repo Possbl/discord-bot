@@ -1,108 +1,148 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
- 
+
+//Global queue for your bot. Every server will have a key and value pair in this map. { guild.id, queue_constructor{} }
+const queue = new Map();
+
 module.exports = {
     name: 'play',
-    description: 'Joins and plays a video from youtube',
-    async execute(message, args, Discord) {
-        const voiceChannel = message.member.voice.channel;
+    aliases: ['skip', 'stop', 'loop'],
+    cooldown: 0,
+    description: 'Advanced music bot',
+    async execute(message, args, command, client, Discord) {
 
-        const vcembederror = new Discord.MessageEmbed()
-        .setColor('#ff0000 ')
-        .setTitle('Voice Channel Error')
-        .setDescription('You need to be in a channel to execute this command!')
-        .setFooter('Gitbot | Made by Possible#0999')
 
-        const permsconnect = new Discord.MessageEmbed()
-        .setColor('#ff0000 ')
-        .setTitle('Permission Error')
-        .setDescription('Please make sure I have Connect Permissions to the voice channel you are in.' + '\n\n' + 'If this is not the case please make sure you have Connect Permissions')
-        .setFooter('Gitbot | Made by Possible#0999')
+        //Checking for the voicechannel and permissions (you can add more permissions if you like).
+        const voice_channel = message.member.voice.channel;
+        if (!voice_channel) return message.channel.send('You need to be in a channel to execute this command!');
+        const permissions = voice_channel.permissionsFor(message.client.user);
+        if (!permissions.has('CONNECT')) return message.channel.send('You dont have the correct permissins');
+        if (!permissions.has('SPEAK')) return message.channel.send('You dont have the correct permissins');
 
-        const permsspeak = new Discord.MessageEmbed()
-        .setColor('#ff0000 ')
-        .setTitle('Permission Error')
-        .setDescription('Please make sure I have Speak Permissions to the voice channel you are in.' + '\n\n' + 'If this is not the case please make sure you have Speak Permissions')
-        .setFooter('Gitbot | Made by Possible#0999')
+        //This is our server queue. We are getting this server queue from the global queue.
+        const server_queue = queue.get(message.guild.id);
 
-        
-        const argmissing = new Discord.MessageEmbed()
-        .setColor('#ff0000 ')
-        .setTitle('Argument Error')
-        .setDescription('Please make sure you include the song title or video title')
-        .setFooter('Gitbot | Made by Possible#0999')
+        //If the user has used the play command
+        if (command === 'play') {
+            if (!args.length) return message.channel.send('You need to send the second argument!');
+            let song = {};
+            message.react("▶️")
 
-        const nextsong = new Discord.MessageEmbed()
-        .setColor('#7CFC00')
-        .setTitle('Song Over')
-        .setDescription('WOOHOO that was some great music, lets turn on some more amazing music by using the +play command again!')
-        .setFooter('Gitbot | Made by Possible#0999')
- 
-        if (!voiceChannel) return message.channel.send(vcembederror);
-        const permissions = voiceChannel.permissionsFor(message.client.user);
-        if (!permissions.has('CONNECT')) return message.channel.send(permsconnect);
-        if (!permissions.has('SPEAK')) return message.channel.send(permsspeak);
-        if (!args.length) return message.channel.send(argmissing);
- 
-        const validURL = (str) =>{
-            var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-            if(!regex.test(str)){
-                return false;
+            //If the first argument is a link. Set the song object to have two keys. Title and URl.
+            if (ytdl.validateURL(args[0])) {
+                const song_info = await ytdl.getInfo(args[0]);
+                song = {
+                    title: song_info.videoDetails.title,
+                    url: song_info.videoDetails.video_url
+                }
             } else {
-                return true;
+                //If there was no link, we use keywords to search for a video. Set the song object to have two keys. Title and URl.
+                const video_finder = async (query) => {
+                    const video_result = await ytSearch(query);
+                    return (video_result.videos.length > 1) ? video_result.videos[0] : null;
+                }
+
+                const video = await video_finder(args.join(' '));
+                if (video) {
+                    song = {
+                        title: video.title,
+                        url: video.url
+                    }
+                } else {
+                    message.channel.send('Error finding video.');
+                }
             }
-        }
 
-        const playingembed = new Discord.MessageEmbed()
-        .setColor('#7CFC00')
-        .setTitle('Now Playing')
-        .setDescription(`:thumbsup: Now Playing ***Your Link!***` )
-        .setFooter('Gitbot | Made by Possible#0999')
- 
-        if(validURL(args[0])){
- 
-            const  connection = await voiceChannel.join();
-            const stream  = ytdl(args[0], {filter: 'audioonly'});
- 
-            connection.play(stream, {seek: 0, volume: 1})
-            .on('finish', () =>{
-                voiceChannel.leave();
-                message.channel.send('leaving channel');
-            });
- 
-            await message.reply(playingembed)
- 
-            return
-        }
- 
-        
-        const  connection = await voiceChannel.join();
- 
-        const videoFinder = async (query) => {
-            const videoResult = await ytSearch(query);
- 
-            return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
- 
-        }
- 
-        const video = await videoFinder(args.join(' '));
+            //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
+            if (!server_queue) {
 
-        const nowplaying = new Discord.MessageEmbed()
-        .setColor('#7CFC00')
-        .setTitle('Now Playing')
-        .setDescription(`:thumbsup: Now Playing ***${video.title}***`)
-        .setFooter('Gitbot | Made by Possible#0999')
- 
-        if(video){
-            const stream  = ytdl(video.url, {filter: 'audioonly'});
-            connection.play(stream, {seek: 0, volume: 1})
-            .on('finish', () =>{
-                message.channel.send(nextsong);
-            });
- 
-            await message.reply(nowplaying)
-        } else {
-            message.channel.send('No video results found');
-        }
+                const queue_constructor = {
+                    voice_channel: voice_channel,
+                    text_channel: message.channel,
+                    connection: null,
+                    songs: [],
+                    loop: false,
+                }
+
+                //Add our key and value pair into the global queue. We then use this to get our server queue.
+                queue.set(message.guild.id, queue_constructor);
+                queue_constructor.songs.push(song);
+
+                //Establish a connection and play the song with the vide_player function.
+                try {
+                    const connection = await voice_channel.join();
+                    queue_constructor.connection = connection;
+                    video_player(message.guild, queue_constructor.songs[0]);
+                } catch (err) {
+                    queue.delete(message.guild.id);
+                    message.channel.send('There was an error connecting!');
+                    throw err;
+                }
+            } else {
+                server_queue.songs.push(song);
+                return message.channel.send(`👍 **${song.title}** added to queue!`);
+            }
+        } else if (command === 'skip') skip_song(message, server_queue);
+        else if (command === 'stop') stop_song(message, server_queue);
+        else if (command === 'loop') loop_song(message, server_queue);
     }
+
+}
+
+const video_player = async (guild, song) => {
+    const song_queue = queue.get(guild.id);
+
+    //If no song is left in the server queue. Leave the voice channel and delete the key and value pair from the global queue.
+    if (!song) {
+        song_queue.voice_channel.leave();
+        queue.delete(guild.id);
+        return;
+    }
+    const stream = ytdl(song.url, {
+        filter: 'audioonly'
+    });
+    song_queue.connection.play(stream, {
+            seek: 0,
+            volume: 0.5
+        })
+        .on('finish', () => {
+            if (!song_queue.loop) song_queue.songs.shift();
+            video_player(guild, song_queue.songs[0]);
+        });
+
+    await song_queue.text_channel.send(`🎶 Now playing **${song.title}**`)
+}
+
+const skip_song = (message, server_queue) => {
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (!server_queue) {
+        return message.channel.send(`There are no songs in queue 😔`);
+    }
+
+    message.react("⏭️")
+
+    server_queue.connection.dispatcher.end();
+}
+
+const stop_song = (message, server_queue) => {
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    server_queue.songs = [];
+
+    message.react("❌")
+
+    server_queue.connection.dispatcher.end();
+}
+
+const loop_song = (message, server_queue) => {
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (!server_queue) return message.channel.send(`There are no songs in queue 😔`);
+
+    server_queue.loop = !server_queue.loop
+
+    message.react("🔁")
+
+    return message.channel.send(`🔁 I have now ${server_queue.loop ? `**Enabled**` : `**Disabled**`} loop.`)
+
+
+
 }

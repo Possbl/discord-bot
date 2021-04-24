@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "discord-player": "^3.4.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "faker": "^5.5.3",
+    "ffmpeg-static": "^4.3.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "node-opus": "^0.3.3",
+    "opusscript": "^0.0.8",
+    "twitch-api-v5": "^2.0.4",
+    "yt-search": "^2.8.0",
+    "ytdl-core": "^4.5.0"
+  }
+}
