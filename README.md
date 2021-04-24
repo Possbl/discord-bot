@@ -13,9 +13,12 @@ then set it up accordingly
 now that is complete type in npm install discord.js
 
 
-Go to the .env file 
-
+create a .env file and set it up like this 
 configure your token and prefix in that file
+
+CLIENT_TOKEN= your token goes here
+PREFIX=your prefix goes here
+
 
 you are more than welcome to change any of the footers on the discord embeds
 feel free to go through the code of the discord bot as well and use it as reference for another project
