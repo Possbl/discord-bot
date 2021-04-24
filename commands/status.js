@@ -1,4 +1,4 @@
-const { execute } = require("../../Cream/commands/status");
+
 
 module.exports = {
     name: 'status',
