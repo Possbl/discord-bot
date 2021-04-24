@@ -29,6 +29,9 @@ module.exports = {
                 }, {
                     name: 'san',
                     value: `just some covid things you know.\n Usage: ${process.env.PREFIX}san\n`
+                },  {
+                    name: 'fake',
+                    value: `Creats Fake Personal Informations.\n Usage: ${process.env.PREFIX}fake\n`
                 }, {
                     name: 'help',
                     value: `shows this info.\n Usage: ${process.env.PREFIX}help\n`
@@ -69,6 +72,9 @@ module.exports = {
                 }, {
                     name: 'san',
                     value: `just some covid things you know.\n Usage: ${process.env.PREFIX}san\n`
+                },  {
+                    name: 'fake',
+                    value: `Creats Fake Personal Informations.\n Usage: ${process.env.PREFIX}fake\n`
                 }, {
                     name: 'help',
                     value: `shows this info.\n Usage: ${process.env.PREFIX}help\n`
