@@ -17,7 +17,7 @@ module.exports = {
             .setImage('https://media.tenor.com/images/b502508d2d6bef4f91802b099ecfcba4/tenor.gif')
             .setFooter(`Gitbot | Made by Possible#0999`)
 
-        if (!message.member.hasPermission('MANAGE_MESSAGES')) { // look here for more perms https://discord.com/developers/docs/topics/permissions
+        if (!message.member.hasPermission('MANAGE_MESSAGES')) {
             message.channel.send(NoPermf)
         }
 
