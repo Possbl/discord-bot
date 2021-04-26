@@ -22,19 +22,19 @@ module.exports = {
                 .setDescription(`Commands for BigClouds`)
                 .addFields({
                     name: 'play, loop, stop or skip',
-                    value: `**plays youtube songs.\n Usage:**\n ${process.env.PREFIX}play <youtube-url\n ${process.env.PREFIX}play <songname>\n ${process.env.PREFIX}skip (skips a song)\n ${process.env.PREFIX}loop (to loop the current song)\n ${process.env.PREFIX}stop (bot stops playing music)`
+                    value: `plays youtube songs.\n Usage:\n ${process.env.PREFIX}play <youtube-url\n ${process.env.PREFIX}play <songname>\n ${process.env.PREFIX}skip (skips a song)\n ${process.env.PREFIX}loop (to loop the current song)\n ${process.env.PREFIX}stop (bot stops playing music)`
                 }, {
                     name: 'tv',
-                    value: `**You can check someones Twitch Profile with it.\n Usage:** ${process.env.PREFIX}tv <TwitchName>\n`
+                    value: `You can check someones Twitch Profile with it.\n Usage: ${process.env.PREFIX}tv <TwitchName>\n`
                 }, {
                     name: 'san',
-                    value: `**just some covid things you know.\n Usage:** ${process.env.PREFIX}san\n`
+                    value: `just some covid things you know.\n Usage: ${process.env.PREFIX}san\n`
                 },  {
                     name: 'fake',
-                    value: `**Creats Fake Personal Informations.\n Usage:** ${process.env.PREFIX}fake\n`
+                    value: `Creats Fake Personal Informations.\n Usage: ${process.env.PREFIX}fake\n`
                 }, {
                     name: 'help',
-                    value: `**shows this info.\n Usage:** ${process.env.PREFIX}help\n`
+                    value: `shows this info.\n Usage: ${process.env.PREFIX}help\n`
 
                 })
                 .setFooter('Made with 💖 by Possible & DWORD', client.user.displayAvatarURL({
@@ -65,19 +65,19 @@ module.exports = {
                 .setDescription(`Commands for BigClouds`)
                 .addFields({
                     name: 'play, loop, stop or skip',
-                    value: `**plays youtube songs.\n Usage:**\n ${process.env.PREFIX}play <youtube-url\n ${process.env.PREFIX}play <songname>\n ${process.env.PREFIX}skip (skips a song)\n ${process.env.PREFIX}loop (to loop the current song)\n ${process.env.PREFIX}stop (bot stops playing music)`
+                    value: `plays youtube songs.\n Usage:\n ${process.env.PREFIX}play <youtube-url\n ${process.env.PREFIX}play <songname>\n ${process.env.PREFIX}skip (skips a song)\n ${process.env.PREFIX}loop (to loop the current song)\n ${process.env.PREFIX}stop (bot stops playing music)`
                 }, {
                     name: 'tv',
-                    value: `**You can check someones Twitch Profile with it.\n Usage:** ${process.env.PREFIX}tv <TwitchName>\n`
+                    value: `You can check someones Twitch Profile with it.\n Usage: ${process.env.PREFIX}tv <TwitchName>\n`
                 }, {
                     name: 'san',
-                    value: `**just some covid things you know.\n Usage:** ${process.env.PREFIX}san\n`
+                    value: `just some covid things you know.\n Usage: ${process.env.PREFIX}san\n`
                 },  {
                     name: 'fake',
-                    value: `**Creats Fake Personal Informations.\n Usage:** ${process.env.PREFIX}fake\n`
+                    value: `Creats Fake Personal Informations.\n Usage: ${process.env.PREFIX}fake\n`
                 }, {
                     name: 'help',
-                    value: `**shows this info.\n Usage:** ${process.env.PREFIX}help\n`
+                    value: `shows this info.\n Usage: ${process.env.PREFIX}help\n`
 
                 })
                 .setFooter('Made with 💖 by Possible & DWORD', client.user.displayAvatarURL({
